@@ -1,10 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+import Navbar from "./Components/Navbar/Navbar";
+
+function App() {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Navbar />
+
+        <Routes>
+          {/* Routes will be added here in later steps */}
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
+}
+
+export default App;
