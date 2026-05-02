@@ -8,37 +8,45 @@ import Sign_Up from "./Components/Sign_Up/Sign_Up";
 import InstantConsultation from "./Components/InstantConsultationBooking/InstantConsultation";
 import BookingConsultation from "./Components/BookingConsultation";
 
+// Notification import
+import Notification from "./Components/Notification/Notification";
+
 function App() {
   return (
     <div className="App">
 
       <BrowserRouter>
 
-        {/* Navbar visible on all pages */}
-        <Navbar />
+        {/* GLOBAL NOTIFICATION WRAPPER */}
+        <Notification>
 
-        <Routes>
+          {/* Navbar visible on all pages */}
+          <Navbar />
 
-          {/* Home Page */}
-          <Route path="/" element={<Landing_Page />} />
+          <Routes>
 
-          {/* Auth Pages */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Sign_Up />} />
+            {/* Home */}
+            <Route path="/" element={<Landing_Page />} />
 
-          {/* Instant Consultation */}
-          <Route
-            path="/instant-consultation"
-            element={<InstantConsultation />}
-          />
+            {/* Auth */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Sign_Up />} />
 
-          {/* Appointment Booking (NEW INTEGRATION) */}
-          <Route
-            path="/booking-consultation"
-            element={<BookingConsultation />}
-          />
+            {/* Instant Consultation */}
+            <Route
+              path="/instant-consultation"
+              element={<InstantConsultation />}
+            />
 
-        </Routes>
+            {/* Booking Consultation */}
+            <Route
+              path="/booking-consultation"
+              element={<BookingConsultation />}
+            />
+
+          </Routes>
+
+        </Notification>
 
       </BrowserRouter>
 
