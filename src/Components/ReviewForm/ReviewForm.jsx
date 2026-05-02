@@ -3,77 +3,114 @@ import "./ReviewForm.css";
 
 const ReviewForm = () => {
   const [showForm, setShowForm] = useState(false);
+  const [submittedData, setSubmittedData] = useState(null);
+  const [showWarning, setShowWarning] = useState(false);
 
-  const [name, setName] = useState("");
-  const [feedback, setFeedback] = useState("");
-  const [rating, setRating] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    review: "",
+    rating: ""
+  });
 
+  // Open form (only if not submitted yet)
+  const handleButtonClick = () => {
+    if (!submittedData) {
+      setShowForm(true);
+    }
+  };
+
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    alert("Thank you for your feedback!");
-
-    setName("");
-    setFeedback("");
-    setRating("");
-    setShowForm(false);
+    if (formData.name && formData.review && formData.rating) {
+      setSubmittedData(formData);
+      setShowForm(false);
+      setShowWarning(false);
+    } else {
+      setShowWarning(true);
+    }
   };
 
   return (
     <div className="review-container">
 
-      {/* CONSULTATION INFO */}
-      <div className="review-info">
-        <h2>Consultation Completed</h2>
-        <p>Please share your feedback about your experience.</p>
+      <h2>Patient Feedback</h2>
 
+      {/* BUTTON (disabled after submission) */}
+      {!showForm && (
         <button
           className="open-review-btn"
-          onClick={() => setShowForm(true)}
+          onClick={handleButtonClick}
+          disabled={submittedData !== null}
         >
           Give Feedback
         </button>
-      </div>
+      )}
 
-      {/* REVIEW FORM */}
+      {/* FORM */}
       {showForm && (
-        <div className="review-form">
+        <form onSubmit={handleSubmit} className="review-form">
 
           <h3>Write Your Review</h3>
 
-          <form onSubmit={handleSubmit}>
+          {showWarning && (
+            <p className="warning">Please fill all fields.</p>
+          )}
 
-            <input
-              type="text"
-              placeholder="Your Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
+          {/* NAME */}
+          <input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            value={formData.name}
+            onChange={handleChange}
+          />
 
-            <textarea
-              placeholder="Your Feedback"
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-              required
-            />
+          {/* REVIEW */}
+          <textarea
+            name="review"
+            placeholder="Write your review..."
+            value={formData.review}
+            onChange={handleChange}
+          />
 
-            <select
-              value={rating}
-              onChange={(e) => setRating(e.target.value)}
-              required
-            >
-              <option value="">Rating</option>
-              <option value="1">1 ⭐</option>
-              <option value="2">2 ⭐⭐</option>
-              <option value="3">3 ⭐⭐⭐</option>
-              <option value="4">4 ⭐⭐⭐⭐</option>
-              <option value="5">5 ⭐⭐⭐⭐⭐</option>
-            </select>
+          {/* RATING SELECTOR (REQUIRED) */}
+          <select
+            name="rating"
+            value={formData.rating}
+            onChange={handleChange}
+          >
+            <option value="">Select Rating</option>
+            <option value="1">1 ⭐</option>
+            <option value="2">2 ⭐⭐</option>
+            <option value="3">3 ⭐⭐⭐</option>
+            <option value="4">4 ⭐⭐⭐⭐</option>
+            <option value="5">5 ⭐⭐⭐⭐⭐</option>
+          </select>
 
-            <button type="submit">Submit Review</button>
+          <button type="submit">Submit</button>
 
-          </form>
+        </form>
+      )}
+
+      {/* DISPLAY SUBMITTED MESSAGE (RED BOX AREA IN LAB) */}
+      {submittedData && (
+        <div className="submitted-box">
+
+          <h3>Submitted Review</h3>
+
+          <p><strong>Name:</strong> {submittedData.name}</p>
+          <p><strong>Review:</strong> {submittedData.review}</p>
+          <p><strong>Rating:</strong> {submittedData.rating} ⭐</p>
 
         </div>
       )}
