@@ -1,110 +1,121 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Login.css";
+import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "../../config";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: ""
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  // Handle input changes
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const navigate = useNavigate();
 
-  // Handle form submit with validation
-  const handleSubmit = (e) => {
+  // Redirect if already logged in
+  useEffect(() => {
+    if (sessionStorage.getItem("auth-token")) {
+      navigate("/");
+    }
+  }, []);
+
+  // Login handler
+  const login = async (e) => {
     e.preventDefault();
 
-    if (!formData.email || !formData.password) {
-      alert("All fields are required");
-      return;
-    }
+    const res = await fetch(`${API_URL}/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
+    });
 
-    alert("Login Successful!");
+    const json = await res.json();
+
+    if (json.authtoken) {
+      sessionStorage.setItem("auth-token", json.authtoken);
+      sessionStorage.setItem("email", email);
+
+      navigate("/");
+      window.location.reload();
+    } else {
+      if (json.errors) {
+        json.errors.forEach((error) => alert(error.msg));
+      } else {
+        alert(json.error);
+      }
+    }
   };
 
   return (
-    <div className="container">
-      <div className="login-grid">
+    <div>
+      <div className="container">
+        <div className="login-grid">
 
-        {/* Title */}
-        <div className="login-text">
-          <h2>Login</h2>
+          {/* Title */}
+          <div className="login-text">
+            <h2>Login</h2>
+          </div>
+
+          {/* Signup redirect */}
+          <div className="login-text">
+            Are you a new member?{" "}
+            <span>
+              <Link to="/signup" style={{ color: "#2190FF" }}>
+                Sign Up Here
+              </Link>
+            </span>
+          </div>
+
+          <br />
+
+          {/* Form */}
+          <div className="login-form">
+            <form onSubmit={login}>
+
+              {/* Email */}
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="form-control"
+                  placeholder="Enter your email"
+                />
+              </div>
+
+              {/* Password (REQUIRED BY LAB) */}
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  name="password"
+                  id="password"
+                  className="form-control"
+                  placeholder="Enter your password"
+                />
+              </div>
+
+              {/* Login button */}
+              <div className="btn-group">
+                <button
+                  type="submit"
+                  className="btn btn-primary mb-2 mr-1 waves-effect waves-light"
+                >
+                  Login
+                </button>
+              </div>
+
+            </form>
+          </div>
+
         </div>
-
-        {/* Sign up link */}
-        <div className="login-text">
-          Are you a new member?{" "}
-          <span>
-            <a href="/Sign_Up/Sign_Up.html" style={{ color: "#2190FF" }}>
-              Sign Up Here
-            </a>
-          </span>
-        </div>
-
-        <br />
-
-        {/* Login form */}
-        <div className="login-form">
-          <form onSubmit={handleSubmit}>
-
-            {/* Email */}
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                className="form-control"
-                placeholder="Enter your email"
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Password */}
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                className="form-control"
-                placeholder="Enter your password"
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Buttons */}
-            <div className="btn-group">
-              <button
-                type="submit"
-                className="btn btn-primary mb-2 mr-1 waves-effect waves-light"
-              >
-                Login
-              </button>
-
-              <button
-                type="reset"
-                className="btn btn-danger mb-2 waves-effect waves-light"
-              >
-                Reset
-              </button>
-            </div>
-
-            <br />
-
-            {/* Forgot password */}
-            <div className="login-text">
-              Forgot Password?
-            </div>
-
-          </form>
-        </div>
-
       </div>
     </div>
   );
