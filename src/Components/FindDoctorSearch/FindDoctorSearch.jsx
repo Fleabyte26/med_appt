@@ -11,22 +11,27 @@ const specialties = [
   "General Physician"
 ];
 
-const FindDoctorSearch = () => {
+const FindDoctorSearch = ({ onSearch }) => {
   const [query, setQuery] = useState("");
   const [showList, setShowList] = useState(false);
 
   const handleSelect = (item) => {
     setQuery(item);
     setShowList(false);
+    if (onSearch) onSearch(item);
   };
 
   return (
     <div className="search-container">
+
       <input
         type="text"
         placeholder="Search doctor specialty..."
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          if (onSearch) onSearch(e.target.value);
+        }}
         onFocus={() => setShowList(true)}
         onBlur={() => setTimeout(() => setShowList(false), 200)}
         className="search-input"
@@ -45,6 +50,7 @@ const FindDoctorSearch = () => {
             ))}
         </ul>
       )}
+
     </div>
   );
 };
