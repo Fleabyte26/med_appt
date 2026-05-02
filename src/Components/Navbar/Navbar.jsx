@@ -1,21 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
-import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const handleClick = () => {
-    const navLinks = document.querySelector(".nav__links");
-    const navIcon = document.querySelector(".nav__icon i");
+  const [click, setClick] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
 
-    navLinks.classList.toggle("active");
+  const navigate = useNavigate();
 
-    if (navLinks.classList.contains("active")) {
-      navIcon.classList.remove("fa-bars");
-      navIcon.classList.add("fa-times");
+  const handleClick = () => setClick(!click);
+
+  // Check login status + extract username from email
+  useEffect(() => {
+    const token = sessionStorage.getItem("auth-token");
+    const email = sessionStorage.getItem("email");
+
+    if (token && email) {
+      setIsLoggedIn(true);
+
+      // extract name before @
+      const nameFromEmail = email.split("@")[0];
+      setUsername(nameFromEmail);
     } else {
-      navIcon.classList.remove("fa-times");
-      navIcon.classList.add("fa-bars");
+      setIsLoggedIn(false);
+      setUsername("");
     }
+  }, []);
+
+  // Logout handler
+  const handleLogout = () => {
+    sessionStorage.clear();
+    localStorage.removeItem("doctorData");
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("reviewFormData_")) {
+        localStorage.removeItem(key);
+      }
+    }
+
+    setIsLoggedIn(false);
+    setUsername("");
+    setClick(false);
+
+    navigate("/");
+    window.location.reload();
   };
 
   return (
@@ -23,48 +53,65 @@ const Navbar = () => {
       {/* Logo */}
       <div className="nav__logo">
         <Link to="/">
-          StayHealthy
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="26"
-            width="26"
-            viewBox="0 0 1000 1000"
-            style={{ fill: "#3685fb" }}
-          >
-            <title>Doctor Icon</title>
-            <circle cx="500" cy="200" r="150" />
-          </svg>
+          StayHealthy <i style={{ color: "#2190FF" }} className="fa fa-user-md"></i>
         </Link>
         <span>.</span>
       </div>
 
-      {/* Hamburger Icon */}
+      {/* Mobile menu */}
       <div className="nav__icon" onClick={handleClick}>
-        <i className="fa fa-bars"></i>
+        <i className={click ? "fa fa-times" : "fa fa-bars"}></i>
       </div>
 
-      {/* Navigation Links */}
-      <ul className="nav__links">
+      {/* Links */}
+      <ul className={click ? "nav__links active" : "nav__links"}>
 
         <li className="link">
           <Link to="/">Home</Link>
         </li>
 
         <li className="link">
-          <Link to="#">Appointments</Link>
+          <Link to="/search/doctors">Appointments</Link>
         </li>
 
         <li className="link">
-          <Link to="/signup">
-            <button className="btn1">Sign Up</button>
-          </Link>
+          <Link to="/healthblog">Health Blog</Link>
         </li>
 
         <li className="link">
-          <Link to="/login">
-            <button className="btn1">Login</button>
-          </Link>
+          <Link to="/reviews">Reviews</Link>
         </li>
+
+        {/* Logged in state */}
+        {isLoggedIn ? (
+          <>
+            {/* Username display */}
+            <li className="link" style={{ color: "#2190FF", fontWeight: "bold" }}>
+              {username}
+            </li>
+
+            {/* Logout button */}
+            <li className="link">
+              <button className="btn2" onClick={handleLogout}>
+                Logout
+              </button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li className="link">
+              <Link to="/signup">
+                <button className="btn1">Sign Up</button>
+              </Link>
+            </li>
+
+            <li className="link">
+              <Link to="/login">
+                <button className="btn1">Login</button>
+              </Link>
+            </li>
+          </>
+        )}
 
       </ul>
     </nav>

@@ -1,75 +1,84 @@
 import React, { useState } from "react";
 import "./Sign_Up.css";
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../../config";
 
 const Sign_Up = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    password: ""
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [showerr, setShowerr] = useState("");
 
-  // Handle input changes
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const navigate = useNavigate();
 
-  // Handle form submit with validation
-  const handleSubmit = (e) => {
+  // Register user
+  const register = async (e) => {
     e.preventDefault();
 
-    // Phone validation: exactly 10 digits
-    const phoneRegex = /^[0-9]{10}$/;
+    const response = await fetch(`${API_URL}/api/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        phone,
+        password
+      })
+    });
 
-    if (!formData.name || !formData.phone || !formData.email || !formData.password) {
-      alert("All fields are required");
-      return;
+    const json = await response.json();
+
+    if (json.authtoken) {
+      sessionStorage.setItem("auth-token", json.authtoken);
+      sessionStorage.setItem("name", name);
+      sessionStorage.setItem("email", email);
+      sessionStorage.setItem("phone", phone);
+
+      navigate("/");
+      window.location.reload();
+    } else {
+      if (json.errors) {
+        setShowerr(json.errors[0].msg);
+      } else {
+        setShowerr(json.error);
+      }
     }
-
-    if (!phoneRegex.test(formData.phone)) {
-      alert("Phone number must be exactly 10 digits");
-      return;
-    }
-
-    alert("Sign Up Successful!");
   };
 
   return (
     <div className="container" style={{ marginTop: "5%" }}>
       <div className="signup-grid">
 
-        {/* Title */}
         <div className="signup-text">
           <h1>Sign Up</h1>
         </div>
 
-        {/* Login link */}
         <div className="signup-text1" style={{ textAlign: "left" }}>
           Already a member?{" "}
           <span>
-            <a href="/Login/Login.html" style={{ color: "#2190FF" }}>
+            <a href="/login" style={{ color: "#2190FF" }}>
               Login
             </a>
           </span>
         </div>
 
-        {/* Form */}
         <div className="signup-form">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={register}>
 
             {/* Name */}
             <div className="form-group">
               <label htmlFor="name">Name</label>
               <input
+                value={name}
                 type="text"
+                onChange={(e) => setName(e.target.value)}
                 name="name"
                 id="name"
                 className="form-control"
                 placeholder="Enter your name"
-                onChange={handleChange}
               />
             </div>
 
@@ -77,12 +86,13 @@ const Sign_Up = () => {
             <div className="form-group">
               <label htmlFor="phone">Phone</label>
               <input
+                value={phone}
                 type="tel"
+                onChange={(e) => setPhone(e.target.value)}
                 name="phone"
                 id="phone"
                 className="form-control"
                 placeholder="Enter your phone number"
-                onChange={handleChange}
               />
             </div>
 
@@ -90,12 +100,13 @@ const Sign_Up = () => {
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <input
+                value={email}
                 type="email"
+                onChange={(e) => setEmail(e.target.value)}
                 name="email"
                 id="email"
                 className="form-control"
                 placeholder="Enter your email"
-                onChange={handleChange}
               />
             </div>
 
@@ -103,14 +114,22 @@ const Sign_Up = () => {
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input
+                value={password}
                 type="password"
+                onChange={(e) => setPassword(e.target.value)}
                 name="password"
                 id="password"
                 className="form-control"
                 placeholder="Enter your password"
-                onChange={handleChange}
               />
             </div>
+
+            {/* Error */}
+            {showerr && (
+              <div style={{ color: "red", marginBottom: "10px" }}>
+                {showerr}
+              </div>
+            )}
 
             {/* Buttons */}
             <div className="btn-group">
