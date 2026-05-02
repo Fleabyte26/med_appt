@@ -5,11 +5,15 @@ import Navbar from "./Components/Navbar/Navbar";
 import Landing_Page from "./Components/Landing_Page/Landing_Page";
 import Login from "./Components/Login/Login";
 import Sign_Up from "./Components/Sign_Up/Sign_Up";
+
 import InstantConsultation from "./Components/InstantConsultationBooking/InstantConsultation";
 import BookingConsultation from "./Components/BookingConsultation";
 
-// Notification import
 import Notification from "./Components/Notification/Notification";
+
+// Reviews module
+import Reviews from "./Components/Reviews/Reviews";
+import ReviewForm from "./Components/ReviewForm/ReviewForm";
 
 function App() {
   return (
@@ -17,32 +21,37 @@ function App() {
 
       <BrowserRouter>
 
-        {/* GLOBAL NOTIFICATION WRAPPER */}
+        {/* GLOBAL NOTIFICATION */}
         <Notification>
 
-          {/* Navbar visible on all pages */}
+          {/* NAVBAR */}
           <Navbar />
 
           <Routes>
 
-            {/* Home */}
+            {/* HOME */}
             <Route path="/" element={<Landing_Page />} />
 
-            {/* Auth */}
+            {/* AUTH */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Sign_Up />} />
 
-            {/* Instant Consultation */}
+            {/* CONSULTATION */}
             <Route
               path="/instant-consultation"
               element={<InstantConsultation />}
             />
 
-            {/* Booking Consultation */}
             <Route
               path="/booking-consultation"
               element={<BookingConsultation />}
             />
+
+            {/* REVIEWS */}
+            <Route path="/reviews" element={<Reviews />} />
+
+            {/* REVIEW FORM */}
+            <Route path="/review-form" element={<ReviewForm />} />
 
           </Routes>
 
