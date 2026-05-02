@@ -1,0 +1,35 @@
+.doctor-card {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    margin: 10px auto;
+    width: 400px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+  }
+  
+  .doctor-card-img img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+  
+  .doctor-card-details-container {
+    flex: 1;
+  }
+  
+  .book-appointment-btn {
+    margin-top: 10px;
+    background-color: #2190ff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .book-appointment-btn:hover {
+    background-color: #0f78d1;
+  }
