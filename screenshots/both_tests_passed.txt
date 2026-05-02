@@ -1,0 +1,9 @@
+theia@theia-krishornung:/home/project/intermediate_webdev_finalproject$ npx jasmine
+Randomized with seed 64483
+Started
+..
+
+
+2 specs, 0 failures
+Finished in 0.007 seconds
+Randomized with seed 64483 (jasmine --random=true --seed=64483
