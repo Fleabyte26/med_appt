@@ -1,60 +1,69 @@
 import React, { useState } from "react";
-import "./AppointmentForm.css";
 
-const AppointmentForm = ({ doctorName, onClose }) => {
-  const [name, setName] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+const AppointmentForm = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    date: "",
+    time: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(
-      `Appointment booked with ${doctorName}\nName: ${name}\nDate: ${date}\nTime: ${time}`
-    );
-    onClose();
+    console.log(formData);
   };
 
   return (
-    <div className="form-overlay">
-      <div className="form-container">
+    <form onSubmit={handleSubmit}>
+      <h2>Book Appointment</h2>
 
-        <h2>Book Appointment</h2>
-        <p>Doctor: {doctorName}</p>
+      {/* Name */}
+      <input
+        type="text"
+        name="name"
+        placeholder="Name"
+        value={formData.name}
+        onChange={handleChange}
+        required
+      />
 
-        <form onSubmit={handleSubmit}>
+      {/* ✅ Phone Number FIELD (THIS IS WHAT YOU ARE MISSING) */}
+      <input
+        type="tel"
+        name="phone"
+        placeholder="Phone Number"
+        value={formData.phone}
+        onChange={handleChange}
+        required
+      />
 
-          <input
-            type="text"
-            placeholder="Patient Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+      {/* Date */}
+      <input
+        type="date"
+        name="date"
+        value={formData.date}
+        onChange={handleChange}
+        required
+      />
 
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
+      {/* Time */}
+      <input
+        type="time"
+        name="time"
+        value={formData.time}
+        onChange={handleChange}
+        required
+      />
 
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            required
-          />
-
-          <button type="submit">Confirm Booking</button>
-
-        </form>
-
-        <button className="close-btn" onClick={onClose}>
-          Close
-        </button>
-
-      </div>
-    </div>
+      <button type="submit">Book Appointment</button>
+    </form>
   );
 };
 
