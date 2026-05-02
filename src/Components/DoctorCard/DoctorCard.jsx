@@ -1,7 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import "./DoctorCard.css";
+import AppointmentForm from "../AppointmentForm/AppointmentForm";
 
 const DoctorCard = ({ name, experience, rating, image }) => {
+  const [showForm, setShowForm] = useState(false);
+  const [isBooked, setIsBooked] = useState(false);
+
+  const handleBook = () => {
+    setShowForm(true);
+  };
+
+  const handleCancel = () => {
+    setIsBooked(false);
+    alert("Appointment Cancelled");
+  };
+
   return (
     <div className="doctor-card">
 
@@ -12,20 +25,42 @@ const DoctorCard = ({ name, experience, rating, image }) => {
       <div className="doctor-card-details-container">
 
         <h3>{name}</h3>
-
         <p>Experience: {experience} years</p>
-
         <p>Rating: ⭐ {rating}</p>
 
-        {/* Book button (REQUIRED BY LAB) */}
-        <div>
-          <button className="book-appointment-btn">
+        {/* BOOK BUTTON */}
+        {!isBooked && (
+          <button
+            className="book-appointment-btn"
+            onClick={handleBook}
+          >
             <div>Book Appointment</div>
             <div>No Booking Fee</div>
           </button>
-        </div>
+        )}
+
+        {/* CANCEL BUTTON */}
+        {isBooked && (
+          <button
+            className="cancel-appointment-btn"
+            onClick={handleCancel}
+          >
+            Cancel Appointment
+          </button>
+        )}
 
       </div>
+
+      {/* APPOINTMENT FORM */}
+      {showForm && (
+        <AppointmentForm
+          doctorName={name}
+          onClose={() => {
+            setShowForm(false);
+            setIsBooked(true);
+          }}
+        />
+      )}
 
     </div>
   );
