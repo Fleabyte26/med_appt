@@ -1,5 +1,6 @@
 import React from "react";
 import "./Navbar.css";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const handleClick = () => {
@@ -21,7 +22,7 @@ const Navbar = () => {
     <nav>
       {/* Logo */}
       <div className="nav__logo">
-        <a href="/Landing_Page/LandingPage.html">
+        <Link to="/">
           StayHealthy
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +34,7 @@ const Navbar = () => {
             <title>Doctor Icon</title>
             <circle cx="500" cy="200" r="150" />
           </svg>
-        </a>
+        </Link>
         <span>.</span>
       </div>
 
@@ -44,25 +45,27 @@ const Navbar = () => {
 
       {/* Navigation Links */}
       <ul className="nav__links">
+
         <li className="link">
-          <a href="/Landing_Page/LandingPage.html">Home</a>
+          <Link to="/">Home</Link>
         </li>
 
         <li className="link">
-          <a href="#">Appointments</a>
+          <Link to="#">Appointments</Link>
         </li>
 
         <li className="link">
-          <a href="/Sign_Up/Sign_Up.html">
+          <Link to="/signup">
             <button className="btn1">Sign Up</button>
-          </a>
+          </Link>
         </li>
 
         <li className="link">
-          <a href="/Login/Login.html">
+          <Link to="/login">
             <button className="btn1">Login</button>
-          </a>
+          </Link>
         </li>
+
       </ul>
     </nav>
   );
